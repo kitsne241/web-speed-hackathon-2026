@@ -16,8 +16,9 @@ staticRouter.use(history());
 const IMAGE_CACHE_PATH = path.resolve(UPLOAD_PATH, "cache/images");
 
 staticRouter.get("/images/*relativePath", async (req, res, next) => {
-  const relativePath = (req.params as Record<string, string>)["relativePath"];
-  if (relativePath === undefined) return next();
+  const relativePathParam = (req.params as Record<string, string | string[]>)["relativePath"];
+  if (relativePathParam === undefined) return next();
+  const relativePath = Array.isArray(relativePathParam) ? relativePathParam.join("/") : relativePathParam;
   const originalPath = path.resolve(UPLOAD_PATH, "images", relativePath);
 
   try {
